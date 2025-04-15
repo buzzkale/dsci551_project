@@ -1,5 +1,6 @@
 from pymongo import MongoClient
 import openai
+# from bson.json_util import dumps
 
 openai.api_key = "your-api-key"
 
@@ -54,7 +55,10 @@ def mongo_query_results(collection_name, mongo_query):
 
     result = collection.find(mongo_filter_dict)
 
+    # TODO
+    # convert result to json
+
     # for obj in result:
     # print(obj)
 
-    return result
+    return loads(dumps(result))
