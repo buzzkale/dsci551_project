@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Natural Language Interface</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .input-bar {
+            width: 60%;
+            padding: 10px;
+            font-size: 16px;
+        }
+        .search-button, .dropdown {
+            padding: 10px 15px;
+            font-size: 16px;
+        }
+        .result {
+            margin-top: 20px;
+        }
+        .input-group {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        .output-block {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Natural Language Query Interface</h1>
+
+    <div class="input-group">
+        <input id="queryInput" class="input-bar" type="text" placeholder="Enter your query here...">
+
+        <select id="optionSelect" class="dropdown">
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">Drake Lyrics</option>
+            <option value="5">Scottish Parliament</option>
+            <option value="6">Wine Reviews</option>
+        </select>
+
+        <button onclick="sendQuery()" class="search-button">Search</button>
+    </div>
+
+    <div id="result" class="result"></div>
+
+    <script>
+        async function sendQuery() {
+            const query = document.getElementById("queryInput").value;
+            const option = document.getElementById("optionSelect").value;
+            const resultDiv = document.getElementById("result");
+            resultDiv.innerHTML = "Loading...";
+
+            const formData = new FormData();
+            formData.append("query", query);
+            formData.append("option", option);
+
+            try {
+                const response = await fetch("/search", {
+                    method: "POST",
+                    body: formData
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Server error: ${response.status}`);
+                }
+
+                // ✅ Expect raw HTML instead of JSON
+                const html = await response.text();
+                resultDiv.innerHTML = html;
+
+            } catch (error) {
+                resultDiv.innerHTML = `<p>Error: ${error.message}</p>`;
+                console.error("Error fetching /search:", error);
+            }
+        }
+    </script>
+</body>
+</html>
