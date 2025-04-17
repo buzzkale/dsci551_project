@@ -30,6 +30,7 @@ def nl2mongo(db_selection, nl_query):
         The linkin_park_youtube_comments collection contains the following fields: {c2_fields}
         """
     elif db_selection == 2:
+        print("in db_selection == 2")
         db = client.eurofootball
         collections = "teams; leagues; games"
         c1_fields = "teamID (int), name (string)"
@@ -57,34 +58,44 @@ def nl2mongo(db_selection, nl_query):
         """
 
     # prompt to gpt
-        prompt = f"""
-            {context}.
-            Convert the following natural language query into a MongoDB query. Return only the mongodb query. Do not include any explanations or markdown. The result be a single line:
-            {nl_query}
-        """
-
-        temp_prompt = """
-        The MongoDB database I'm working with is about professional European football.
-        It contains three collections: teams; leagues; games.
-        The teams collection contains the following fields: teamID (int), name (string). 
-        The leagues collection contains the following fields: leagueID (int),name (string),understatNotation (string). 
-        The games collection contains the following fields: gameID (int),leagueID (int),season (int),date (datetime),homeTeamID (int),awayTeamID (int),homeGoals (int),awayGoals (int),homeProbability (floa>
+    prompt = f"""
+        {context}.
         Convert the following natural language query into a MongoDB query. Return only the mongodb query. Do not include any explanations or markdown. The result be a single line:
-        Find all teams named Barcelona
-        """
+        {nl_query}
+    """
+
+    print(f"PROMPT: {prompt}")
     
     # gpt response
     response = client_openai.responses.create(
         model="gpt-4.1",
-        input=[{
-            "role": "system",
-            "content": "You are a MongoDB expert."
-        },
-        {
-            "role": "user",
-            "content": prompt
-        }]
+        input=[
+            {
+                "role": "system",
+                "content": "You are a MongoDB expert."
+            },
+            {
+                "role": "user",
+                "content": prompt
+            }
+        ],
+        text={"format": {"type": "text"}},
+        temperature=0
     )
+
+    # response = client.responses.create(
+    #     model="gpt-4.1",
+    #     input=[
+    #         {
+    #             "role": "system",
+    #             "content": "You are a MongoDB expert."
+    #         },
+    #         {
+    #             "role": "user",
+    #             "content": prompt
+    #         }
+    #         ]
+    # )
 
     mongo_query = response.output_text.strip()
     
