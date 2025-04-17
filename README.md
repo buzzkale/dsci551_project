@@ -1,11 +1,12 @@
 # dsci551_project
 
-## JSON Datasets
+## Datasets
 
-Drake Lyrics Dataset: https://www.kaggle.com/datasets/juicobowley/drake-lyrics/data
+Linkin Park Youtube: https://www.kaggle.com/datasets/shresthajeevan/linkin-park-youtube-video-comments-for-nlp?select=linkin_park_youtube_comments.csv
 
-Scottish Parliament Dataset: https://data.parliament.scot/api/members
+European Football: https://www.kaggle.com/datasets/technika148/football-database?select=games.csv
+* This dataset was modified to be much smaller for computing purposes.
 
 Wine Reviews Dataset: https://www.kaggle.com/datasets/zynicide/wine-reviews
-* This dataset was modified to be much smaller for computing purposes.
+
 
