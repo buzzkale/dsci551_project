@@ -11,14 +11,12 @@ client = MongoClient()
 def nl2mongo(db_selection, nl_query):
     # variables
     db = None
-    db_name = ""
     collections = ""
     context = ""
 
-    #
+    # different context for different DBs
     if db_selection == 1:
         db = client.linkinpark
-        db_name = "linkin_park"
         collections = "linkin_park_youtube; linkin_park_youtube_comments"
         c1_fields = "ID (int),Video ID (string),Title (string),Thumbnail URL (string),Published At (datetime),Channel ID (string),Channel Title (string),View Count (int),Like Count (int),Dislike Count (int)"
         c2_fields = "ID (int),Video ID (string),Comment (string),Commenter (string),Comment Datetime (datetime),Sentiment (string)"
@@ -42,17 +40,27 @@ def nl2mongo(db_selection, nl_query):
         The games collection contains the following fields: {c3_fields}.
         """
     elif db_selection == 3:
-        collections = ""
-        fields = ""
-        context = f""
+        db = client.bikestore
+        collections = "brands; categories; products"
+        c1_fields = "brand_id (int),brand_name (string)"
+        c2_fields = "category_id (int),category_name (string)"
+        c3_fields = "product_id (int),product_name (string),brand_id (int),category_id (int),model_year (int),list_price (float)"
+        context = f"""
+        The MongoDB database I'm working with is about bikes.
+        It contains three collections: {collections}.
+        The brands collection contains the following fields: {c1_fields}.
+        The categories collection contains the following fields: {c2_fields}.
+        The products collection contains the following fields: {c3_fields}.
+        """
 
+    # prompt to gpt
     prompt = f"""
         {context}.
-        The name of the database is \"{db_name}\".
         Convert the following natural language query into a MongoDB query. Return only the mongodb query. Do not include any explanations or markdown. The result be a single line:\n
         {nl_query}
     """
     
+    # gpt response
     response = openai.ChatCompletion.create(
         model="gpt-4",
         messages=[{"role": "system", "content": "You are a MongoDB expert."},
