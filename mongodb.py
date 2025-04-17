@@ -1,11 +1,13 @@
 from pymongo import MongoClient
-import openai
+from openai import OpenAI
 import json
 from bson.json_util import dumps
+import ast
 
-openai.api_key = "your-api-key"
+# openai.api_key = "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"
 
 client = MongoClient()
+client_openai = OpenAI()
 # dsci551 = client.dsci551
 
 def nl2mongo(db_selection, nl_query):
@@ -13,6 +15,7 @@ def nl2mongo(db_selection, nl_query):
     db = None
     collections = ""
     context = ""
+    prompt = ""
 
     # different context for different DBs
     if db_selection == 1:
@@ -54,40 +57,50 @@ def nl2mongo(db_selection, nl_query):
         """
 
     # prompt to gpt
-    prompt = f"""
-        {context}.
-        Convert the following natural language query into a MongoDB query. Return only the mongodb query. Do not include any explanations or markdown. The result be a single line:\n
-        {nl_query}
-    """
+        prompt = f"""
+            {context}.
+            Convert the following natural language query into a MongoDB query. Return only the mongodb query. Do not include any explanations or markdown. The result be a single line:
+            {nl_query}
+        """
     
     # gpt response
-    response = openai.ChatCompletion.create(
-        model="gpt-4",
-        messages=[{"role": "system", "content": "You are a MongoDB expert."},
-                  {"role": "user", "content": prompt}]
+    response = client_openai.responses.create(
+        model="gpt-4.1",
+        input=[prompt]
     )
 
-    mongo_query = response["choices"][0]["message"]["content"].strip()
+    mongo_query = response.output_text.strip()
     
     return db, mongo_query
 
 def mongo_query_results(db, mongo_query):
     print(f"Generated MongoDB query: {mongo_query}")
-    
-    try:
-        # get collection and filtering
-        collection_name = mongo_query.split(".find(")[0].split(".")[-1]
-        raw_filter = mongo_query.split(".find(")[1].rstrip(")")
-        # turn string into dictionary
-        mongo_filter = eval(raw_filter) if raw_filter.strip() else {}
 
-        # execute query
+    try:
+        # verifying api result
+        if not mongo_query.startswith("db."):
+            raise ValueError("Query must start with 'db.'")
+
+        # parsing api result
+        query_body = mongo_query[3:] 
+        collection_name, rest = query_body.split(".find(", 1)
+        raw_filter = rest.rstrip(")").strip()
+
+        # string to python dict
+        mongo_filter = ast.literal_eval(raw_filter) if raw_filter else {}
+
+        # run query
         collection = db[collection_name]
         result = collection.find(mongo_filter)
 
+        # return result
+
         print(f"\nResults from collection '{collection_name}':\n")
         for doc in result:
-            print(json.loads(dumps(doc)))
+            print(dumps(doc, indent=2))
 
     except Exception as e:
         print(f"Error executing MongoDB query: {e}")
+
+selected_db, mongo_query = nl2mongo(2, "Find all teams named Barcelona")
+mongo_query_results(selected_db, mongo_query)
