@@ -2,17 +2,18 @@ from pymongo import MongoClient
 from pymongo.errors import ConnectionFailure
 from openai import OpenAI
 import json
-from bson.json_util import dumps
+# from bson.json_util import dumps
 import ast
 
 # openai.api_key = "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"
 
-client = MongoClient("mongodb://localhost:27017/")
+client = MongoClient("mongodb://ec2-52-53-188-196.us-west-1.compute.amazonaws.com:27017/")
 client_openai = OpenAI()
+
 
 def nl2mongo(db_selection, nl_query):
     # variables
-    print(f"Natural language query: {nl_query}")
+    # print(f"Natural language query: {nl_query}")
     db = None
     collections = ""
     context = ""
@@ -89,23 +90,33 @@ def nl2mongo(db_selection, nl_query):
     return db, mongo_query
 
 def mongo_query_results(db, mongo_query):
-    print(f"Generated MongoDB query: {mongo_query}")
+    # print(f"Generated MongoDB query: {mongo_query}")
 
     try:
         # turning string into Python code
         result = eval(mongo_query)
         
         # printing results
+        # if isinstance(result, int) or isinstance(result, float):
+        #     print(result)
+        # else:
+        #     for r in result:
+        #         print(r)
+
+        # result list
+        result_list = []
         if isinstance(result, int) or isinstance(result, float):
-            print(result)
+            result_list.append(result)
         else:
             for r in result:
-                print(r)
-
+                result_list.append(r)
+        
+        return result_list, mongo_query
 
     except Exception as e:
-        print(f"Error executing MongoDB query: {e}")
+        # print(f"Error executing MongoDB query: {e}")
+        return e, mongo_query
 
 # test code:
-selected_db, mongo_query = nl2mongo(2, "How many games did the league Premier League play in 2015?")
-mongo_query_results(selected_db, mongo_query)
+# selected_db, mongo_query = nl2mongo(2, "How many games did the league Premier League play in 2015?")
+# mongo_query_results(selected_db, mongo_query)

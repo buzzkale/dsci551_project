@@ -39,12 +39,8 @@
         <input id="queryInput" class="input-bar" type="text" placeholder="Enter your query here...">
 
         <select id="optionSelect" class="dropdown">
-            <option value="1">1</option>
-            <option value="2">2</option>
-            <option value="3">3</option>
-            <option value="4">Drake Lyrics</option>
-            <option value="5">Scottish Parliament</option>
-            <option value="6">Wine Reviews</option>
+            <option value="1">SQL</option>
+            <option value="2">MongoDB - European Football</option>
         </select>
 
         <button onclick="sendQuery()" class="search-button">Search</button>
@@ -73,7 +69,7 @@
                     throw new Error(`Server error: ${response.status}`);
                 }
 
-                // ✅ Expect raw HTML instead of JSON
+                // expect raw HTML instead of JSON
                 const html = await response.text();
                 resultDiv.innerHTML = html;
 
