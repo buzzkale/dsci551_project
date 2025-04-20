@@ -1,4 +1,3 @@
-
 import pymysql
 import openai
 import sys

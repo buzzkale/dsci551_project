@@ -15,28 +15,33 @@ async def search(query: str = Form(...), option: str = Form(...)):
     print(f"Received query: '{query}' with DB option: {option}")
     
     try:
-        db, mongo_query = mongodb.nl2mongo(int(option), query)
-        result, raw_query = mongodb.mongo_query_results(db, mongo_query)
+        if (int(option)== 1):
+            # TODO: implement sql
+            return None
+        elif (int(option)==2):
+            mongo_query = mongodb.nl2mongo(query)
+            result, raw_query = mongodb.mongo_query_results(mongo_query)
 
-        html = "<h2>Query Result</h2>"
-        html += f"<p><strong>MongoDB Query:</strong> <code>{raw_query}</code></p>"
-        html += "<div style='border:1px solid #ccc; padding:10px; margin-top:10px;'>"
+            html = "<h2>Query Result</h2>"
+            html += f"<p><strong>MongoDB Query:</strong> <code>{raw_query}</code></p>"
+            html += "<div style='border:1px solid #ccc; padding:10px; margin-top:10px;'>"
 
-        if isinstance(result, Exception):
-            html += f"<p style='color:red;'>Error: {result}</p>"
-        elif isinstance(result, (int, float, str)):
-            html += f"<p>{result}</p>"
-        elif isinstance(result, list):
-            if not result:
-                html += "<p>No results found.</p>"
+            if isinstance(result, Exception):
+                html += f"<p style='color:red;'>Error: {result}</p>"
+            elif isinstance(result, (int, float, str)):
+                html += f"<p>{result}</p>"
+            elif isinstance(result, list):
+                if not result:
+                    html += "<p>No results found.</p>"
+                else:
+                    for i, item in enumerate(result):
+                        html += f"<pre><strong>Result {i+1}</strong>: {item}</pre>"
             else:
-                for i, item in enumerate(result):
-                    html += f"<pre><strong>Result {i+1}</strong>: {item}</pre>"
-        else:
-            html += f"<pre>{result}</pre>"
+                html += f"<pre>{result}</pre>"
 
-        html += "</div>"
-        return HTMLResponse(content=html)
+            html += "</div>"
+            return HTMLResponse(content=html)
+        
 
     except Exception as e:
         return HTMLResponse(content=f"<p style='color:red;'>Server Error: {e}</p>", status_code=500)
