@@ -2,7 +2,7 @@
 import pymysql
 from openai import OpenAI
 
-# openai.api_key = "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"
+openai.api_key = "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"
 
 # initial pymysql connection
 connection = pymysql.connect(
@@ -18,7 +18,7 @@ def nl_2_sql(nl_query):
     tables = "brands; categories; products"
     t1_fields = "brand_ID (INT), brand_name (VARCHAR)"
     t2_fields = "category_ID (INT), category_name (VARCHAR)"
-    t3_fields = "product_ID (INT), product_name (VARCHAR), brand_ID (INT), category_ID (INT), model_year (DATETIME), list_price (FLOAT)"
+    t3_fields = "product_ID (INT), product_name (VARCHAR), brand_ID (INT), category_ID (INT), model_year (YEAR), list_price (FLOAT)"
 
     context = f"""
     The MySQL database I'm working with is about bike stores.
