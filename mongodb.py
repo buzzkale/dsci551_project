@@ -89,5 +89,5 @@ def mongo_query_results(mongo_query):
         return e, mongo_query
 
 # test code:
-# selected_db, mongo_query = nl2mongo(2, "How many games did the league Premier League play in 2015?")
-# mongo_query_results(selected_db, mongo_query)
+# mongo_query = nl2mongo("How many games did the league Premier League play in 2015?")
+# mongo_query_results(mongo_query)
