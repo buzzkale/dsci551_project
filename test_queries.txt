@@ -1,0 +1,7 @@
+MySQL:
+
+
+MongoDB:
+Which leagues contain the letter L? (regex)
+How many games did the league Premier League play in 2015? (return int)
+Which team scored the most goals at home in 2015? Only output the name of the team. (lookup, aggregate)
