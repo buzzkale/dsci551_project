@@ -32,8 +32,8 @@ def nl2mongo(nl_query):
     # prompt to gpt
     prompt = f"""
         {context}.
-        Convert the following natural language query into a MongoDB query. Return only the mongodb query. Do not include any explanations or markdown. I will be evaluating the query through PyMongo, so make sure the keys are in quotes. The result be a single line:
-        {nl_query}
+        Convert the following natural language query into a PyMongo MongoDB query. Return only the mongodb query. Do not include any explanations or markdown. I will be evaluating the query through PyMongo, so make sure the keys are in quotes. The result be a single line:
+        {nl_query}.
     """
 
     # print(f"PROMPT: {prompt}")
