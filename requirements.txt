@@ -1,0 +1,6 @@
+fastapi
+openai
+uvicorn[standard]
+jinja2
+pymysql
+pymongo

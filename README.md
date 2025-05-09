@@ -13,7 +13,7 @@ Requirements:
 * MySQL (in EC2)
 * MongoDB (in EC2)
 * OpenAI API key
-* Libraries: pymysql, openai, pymongo, fastapi
+* Libraries: pymysql, openai, pymongo, fastapi, jinja, uvicorn[standard]
 
 Setup prerequisites:
 * In order for the code to access EC2, you must add the security group inbound rules:
@@ -57,4 +57,4 @@ INFO:     Started server process [7161]
 INFO:     Waiting for application startup.
 INFO:     Application startup complete.
 
-Copy http://127.0.0.1:8000 (do not use keyboard shortcuts) and paste the url into your browser. The program should be able to run at this point.
+Copy http://127.0.0.1:8000 (do not use keyboard shortcuts) and paste the url into your browser. The program should be able to run at this point. There are some sample natural language queries to try in test_queries.txt.
