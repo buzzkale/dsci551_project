@@ -2,8 +2,6 @@ from pymongo import MongoClient
 from pymongo.errors import ConnectionFailure
 from openai import OpenAI
 
-# openai.api_key = "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"
-
 client = MongoClient("mongodb://ec2-52-53-188-196.us-west-1.compute.amazonaws.com:27017/")
 db = client.eurofootball
 client_openai = OpenAI()
